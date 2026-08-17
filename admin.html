@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>abhisales.in - Admin Panel</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .login-box, .admin-panel { max-width: 800px; margin: 30px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #198754; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 15px; }
+        button:hover { background: #157347; }
+        .danger-btn { background: #dc3545; padding: 5px 10px; font-size: 13px; }
+        .danger-btn:hover { background: #bb2d3b; }
+        .edit-btn { background: #ffc107; color: black; padding: 5px 10px; font-size: 13px; margin-right: 5px; }
+        .edit-btn:hover { background: #ffca2c; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        th { background: #343a40; color: white; }
+        .flex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-link { display: inline-block; margin-bottom: 15px; color: #198754; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box" id="loginSection">
+        <a href="index.html" class="back-link">&larr; Back to abhisales.in</a>
+        <h2>Admin Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username (admin)" required>
+            <input type="password" id="password" placeholder="Password (admin123)" required>
+            <button type="submit">Login</button>
+        </form>
+        <p id="loginMsg" style="color: red; margin-top: 10px;"></p>
+    </div>
+
+    <div class="admin-panel hidden" id="adminSection">
+        <div class="flex-header">
+            <h2>abhisales.in - Product Dashboard</h2>
+            <button onclick="logout()" class="danger-btn">Logout</button>
+        </div>
+        <a href="index.html" class="back-link">&larr; Visit Website</a>
+
+        <h3 id="formTitle">Add New Product</h3>
+        <form id="productForm">
+            <input type="hidden" id="productId">
+            <input type="text" id="title" placeholder="Product Title" required>
+            <input type="text" id="price" placeholder="Price (e.g. ₹999)" required>
+            <select id="category" required>
+                <option value="">Select Category</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Cloths">Cloths</option>
+                <option value="Shoes">Shoes</option>
+            </select>
+            <input type="text" id="image" placeholder="Image URL" required>
+            <input type="url" id="link" placeholder="Affiliate Buy Link" required>
+            <button type="submit" id="submitBtn">Add Product</button>
+            <button type="button" id="cancelBtn" class="hidden" onclick="resetForm()" style="background: #6c757d; margin-left: 10px;">Cancel</button>
+        </form>
+
+        <h3 style="margin-top: 30px;">Existing Products</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const res = await fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('adminSection').classList.remove('hidden');
+                loadProducts();
+            } else {
+                document.getElementById('loginMsg').innerText = "Incorrect username or password";
+            }
+        });
+
+        function logout() {
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+        }
+
+        async function loadProducts() {
+            const res = await fetch('/api/products');
+            const products = await res.json();
+            const tbody = document.getElementById('tableBody');
+            if(products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No products found</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td>${p.title}</td>
+                    <td>${p.price}</td>
+                    <td>${p.category}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editProduct('${p.id}', '${escapeStr(p.title)}', '${p.price}', '${p.category}', '${p.image}', '${p.link}')">Edit</button>
+                        <button class="danger-btn" onclick="deleteProduct('${p.id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function escapeStr(str) { return str.replace(/'/g, "&apos;"); }
+
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('productId').value;
+            const product = {
+                title: document.getElementById('title').value,
+                price: document.getElementById('price').value,
+                category: document.getElementById('category').value,
+                image: document.getElementById('image').value,
+                link: document.getElementById('link').value
+            };
+
+            const url = id ? `/api/products/${id}` : '/api/products';
+            const method = id ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
+            });
+            const data = await res.json();
+            if (data.success) {
+                resetForm();
+                loadProducts();
+            }
+        });
+
+        function editProduct(id, title, price, category, image, link) {
+            document.getElementById('productId').value = id;
+            document.getElementById('title').value = title;
+            document.getElementById('price').value = price;
+            document.getElementById('category').value = category;
+            document.getElementById('image').value = image;
+            document.getElementById('link').value = link;
+
+            document.getElementById('formTitle').innerText = "Edit Product";
+            document.getElementById('submitBtn').innerText = "Update Product";
+            document.getElementById('cancelBtn').classList.remove('hidden');
+        }
+
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = "";
+            document.getElementById('formTitle').innerText = "Add New Product";
+            document.getElementById('submitBtn').innerText = "Add Product";
+            document.getElementById('cancelBtn').classList.add('hidden');
+        }
+
+        async function deleteProduct(id) {
+            if (confirm("Delete this product?")) {
+                const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) loadProducts();
+            }
+        }
+    </script>
+</body>
+</html>

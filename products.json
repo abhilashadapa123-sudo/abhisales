@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1",
+    "title": "Wireless Bluetooth Earbuds",
+    "price": "₹900",
+    "category": "Electronics",
+    "image": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=200",
+    "link": "https://your-affiliate-link.com"
+  },
+  {
+    "id": "2",
+    "title": "Men's Casual Cotton Shirt",
+    "price": "₹599",
+    "category": "Cloths",
+    "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=200",
+    "link": "https://your-affiliate-link.com"
+  },
+  {
+    "id": "3",
+    "title": "Running Sports Shoes",
+    "price": "₹1,299",
+    "category": "Shoes",
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200",
+    "link": "https://your-affiliate-link.com"
+  },
+  {
+    "id": "1786994004745",
+    "title": " For Motorola Moto G05 Case",
+    "price": "₹5,398",
+    "category": "Electronics",
+    "image": "https://m.media-amazon.com/images/I/41IKex-snBL._MCnd_AC_.jpg",
+    "link": "https://www.amazon.in/hz/mobile/mission/?_encoding=UTF8&p=FUf%2BB61cwYs4CybpvWNppLrzkwjIDoBeVs7v9wvcQNI85tciOZzUg2tgERy7283Yx0ULoTubcCbYxM8dW1IKMJIvP%2BPu%2FzjIiF%2BXbCPyRmTwG3mUMNyfpcKSMFWa98pBayFz7s4W4HwQ2PC9%2BpkVhnMsGmcKI%2FVb5rpBzmRiWJFV4mHIe6WaUa8%2BzQhZ4XTNHgWpZtePYdBnWA04WCQ5qqrhYekNXsKt948Purz4r4kR0w7bkXvEeY9HQBlCiFGw47jmdZqbdulS1HEa7%2FvuvN7Z5eKvIqTtz5LffDC72%2FzzmVoLIcKMzqV8DA7WnHFsv4H%2BDjv2y09GfuSGaXrw6YBixPQlJKtEmJ9hMwVkImqmHxKs0qaddUyqVjjb3h5N%2BOk9ZVxUT7mf4WzPKoyLf0N%2Bvzega%2BVvi6lwRLlEnC1FoR95H2wp4iBNjK%2FOLc%2F0%2BNTCeuDeiAi40hequowiT4qtNHcNHSawRA0tTb%2FIJoEf4toaLz5jsmsPnQjo%2BjAFApZqa2VyO4MHftVnuoFPdLC5GYA33oLKI6QCE0YwcW%2BCGNkt3RvxxwVmaNSgqlQG4p9nK%2B%2FyoMIWi5UU1TPNgoIoSdQ%2FuKezKazDNBBSpIE%3D&pd_rd_w=d0wcY&content-id=amzn1.sym.3b239ffd-5a7d-4d5d-a2af-b2b512da4a2f%3Aamzn1.symc.7cb1f3f5-2abf-40fe-96b7-396919f9e492&pf_rd_p=3b239ffd-5a7d-4d5d-a2af-b2b512da4a2f&pf_rd_r=I9XCRE75WCV0E0KUZRPG&pd_rd_wg=enkMi&pd_rd_r=ac7869a3-96f7-4c44-88c5-0b6a6ca79e8d&ref_=pd_hp_d_atf_ci_mcx_mi_"
+  },
+  {
+    "id": "1786994161804",
+    "title": "Motorola g86 Power 5G ",
+    "price": "₹17,835",
+    "category": "Electronics",
+    "image": "https://m.media-amazon.com/images/I/4127pxUDQqL._MCnd_AC_.jpg",
+    "link": "https://www.amazon.in/Motorola-Spellbound-TurboPower-Dimensity-Processor/dp/B0FKN95GMN?ref_=pd_ci_mcx_mh_pe_im_d1_hxwPPE_sspa_dk_det_cai_p_0_0&pd_rd_i=B0FKN95GMN&pd_rd_w=ZBtDM&content-id=amzn1.sym.3335f848-cd48-493f-a4bf-73f77e2cd15d&pf_rd_p=3335f848-cd48-493f-a4bf-73f77e2cd15d&pf_rd_r=FTAFWQ36SS0NXCG4ZYXJ&pd_rd_wg=O84a8&pd_rd_r=b8d271f1-2b4e-420c-960e-3a57a3b1a077"
+  },
+  {
+    "id": "1786994293138",
+    "title": "SP 18650 Lithium Battery Holder",
+    "price": " ₹149",
+    "category": "Electronics",
+    "image": "https://m.media-amazon.com/images/I/61nP01ptJaL._SL1000_.jpg",
+    "link": "https://www.amazon.in/gp/product/B0BM6NVS3F/ref=ewc_pr_img_1?smid=A3C7Z4RVM9A3G1&psc=1"
+  },
+  {
+    "id": "1786994416406",
+    "title": "Boldfit Casual Shoes for Man & Woman",
+    "price": "₹699",
+    "category": "Shoes",
+    "image": "https://m.media-amazon.com/images/I/61EcNaLh47L._AC_SX416_CB1169409_QL70_.jpg",
+    "link": "https://aax-eu-zaz.amazon.in/x/c/JLsy8ChOjAcraJWwVHGOFJcAAAGgESk93goAAAH2AQBvbm9fdHhuX2JpZDEgICBvbm9fdHhuX2ltcDEgICC5w-gL/clv1c_ek-ww_f3VdbWDhWsRyJvOAyhTGhUb4Y4DPeUHSWNw6K3oKylEC_JrNJ94VQv46nl9wLcuTAPX8P3N-8jIa4oLv8vtQKNrOt-4GjBRFJQWFi2H2PCZh5aPf_z4_-0BlBxDM_aKnCBBk6GI9D_1vQPhlresk2cl1veosfUf3_qfIde3WJQ-ojFvMlUePnsEMtj5xlqy39Hr0_AHdmp91mNuzj-_cdzUZ-qAgLBaycLb1e6P9yvZpuVHWd3-VKLmvMUcOS9IFYUcO5k0rg0Mp1sXaD6InjAupWBGvd5b53MOV7SjWhedLOVHVOu3CKfUR8XrgsDNTeI8Nyj7y66PpPgtWLKcOMl8csq4ZArnpPTXnmHWLDfPf5wgtKGiq-0d-QYkctJh2NEV3nJy9VR8rk7XwTp3ywcegNX9xlyE515x4iHCletuMHW_YhmpYu2ynwn_6MIy_-74Q4fWeC0MJvOKyk1_FUpi-GKwgzPMWF8LbJSfP4ftUjnj5BPJmNIFtns5dc6GDg2-NvKhbX_3hS17Fqy2rFNg3o7Z8r5B88JpQ71iCPhXOVxNx3v3y89ClZRp6BjrSD4ObBmVfmyWY3khgOH3aQRtz251lxGaiHDLlabn2ioNulS4Y90s3T6flvdiUYYWnXz8xCnPmY_1pVLjlnHQo9JT4zLAlWbComFvUGUQ_593hoYToSyul2ftwVoDl8S6FFDxojj8Azce_gITHjhxDQ1QzYm3dG9p3W9gEm09Gi4ll4vGj2yohRjBnowbOKL0XVOmsc7K-PnACEg8ek0wrUkkoYoPuP1NofphwhNsqmn5x2Rzwb36Tv2R8xXFuzCypZQDqvBnXHWZ68ZIfXf-CvUTh2iuaSPkycigHeG8FhRDuRAVZFEIKxEsQhSkJybnneVlJuZO3H9A04pGcO72ZIf2RZkwX7lnGFDfgpelwsvgKwpqadS8k9Z4z-SnPCIFzFDsbfslc9ExtodB5xCeqAZ-at4hGkDhcuopau_tUfzE2P6lLMsS6pjjNO9ppjYYvv0gV7Ek6s704lhzVDrWoXBEmvZtw/https://www.amazon.in/gp/aw/d/B0D1KMKL3Y/?_encoding=UTF8&pd_rd_plhdr=t&aaxitk=16b554f99218395c7f1db8e410188224&hsa_cr_id=0&qid=1786994310&sr=1-2-e0fa1fdd-d857-4087-adda-5bd576b25987&i=aps&aref=Bl4fOxDQiO&ref_=sbx_s_sparkle_sbtcd_asin_1_img&pd_rd_w=IfJHj&content-id=amzn1.sym.c0c4f4ed-4ecc-4626-b0b0-d428311a6244%3Aamzn1.sym.c0c4f4ed-4ecc-4626-b0b0-d428311a6244&pf_rd_p=c0c4f4ed-4ecc-4626-b0b0-d428311a6244&pf_rd_r=HZHCQCPXF74Z8YAPED0M&pd_rd_wg=3IwlU&pd_rd_r=5803ee1f-3da7-405d-a466-c6b1a3d00948"
+  },
+  {
+    "id": "1786994660379",
+    "title": "SOFTSPUN Microfiber Cloth 5pcs 40x40cms",
+    "price": " ₹291",
+    "category": "Cloths",
+    "image": "https://m.media-amazon.com/images/I/91J9he2Q3uL._AC_SX416_CB1169409_QL70_.jpg",
+    "link": "https://aax-eu-zaz.amazon.in/x/c/JE_HWmsTxIVPVyB5jt6jWmEAAAGgES2JsgoAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICCrVXSV/clv1c_ek-ww4HXFcbWDdHYnp_9Iqt67U6SK2ptnJYn1KXIH-rtjg6NLiM88gZ7wmuV7tPvze3BDkx-mrNr_O-9kE_Z_e6Ez2e5xOIgPqmF7i7X4soH-73o-lE3yRvu3s005jSzxQmwUGXhpb4wBNsswA6Fvv_BsN2ZnCXaUnThjpaqBYEHQFEJERFx1YEFcGtgnFj6iFR6kAkjv1dYhf81N2nvuzj_feZjge4sqBdE7-WHGnbtK46xOg8OcMIdIKBmxv7R3TJ4rZ0FLRhOGFrqAdALs9gRT8_uSenxBvd_VkTSARrhITOZ_2HjSrLIZ_rppxaiIzKXt5O5NAyyrK9oBVJRQkuE9mROeZjrxBj3fTLr6pQAQ_nxeBoLnjcjIPI3J148GoNd0pkBQVc8_U_1rrw_D2iuiV_1fCAzmongxWRDcW_3lOTlApmR-30rgiyGmSCvyMZKmLEVfDCgZToUvO4Tmf4KoQTbVH3jmRLbtLTPg4sbILhD38daLhiHcXlbpRo33ZNS9yZNx_ODpoqOELhdnc5XAVIXukyuXq693CeKTRmc2SzaCAjojyrUCoOWPtOJX4CX2Pn1ZhvMvZkcxMd63eS-mBCLr4c53gI6VQAHDVRlnwSqHm3P_Z6EyaAwn8GCbGya8Bq4W0tMDYqnZvS7uDM-xwWwl36kRUpbMsD6knarchfpmsY2vq1edEPztBXiIA7z8dYU8qfw9xMdxlJRTGmnrT05eDpSkgWQiPfGPiTYf3x7K4m6yj4hmoBqqFD-7utHS8SMsvpC3rmfASwXR3YdyFPGdIE8qsPfxb6nE2ecgbjSNbpNij6VWHnuwLtB4Nu0arN1OWUrLPTKSoFdM-N2PVOf0-4mtGY0IZTYqVaI_DyS6haA68bnf7ASTifue0WB-EeFHd4DIUfCQJ31ciTZEJuzsHbFECbyzcoitIraOezl1d348l1H6pOBBZBXjCAe6_EZJmLroYPCSHk88JNDMlMdIt49OZ_bnCezmU0-E4zktDTd4d0rdA_1NPvKaKvLMXFw17P4ASO5ahUEM7P9WDD_Zbg2ibeMdbFijhqeiMzaJeJepIxs/https://www.amazon.in/gp/aw/d/B01LZ3TGL2/?_encoding=UTF8&pd_rd_plhdr=t&aaxitk=efddfa714ad3119819ae6299bab91590&hsa_cr_id=0&qid=1786994591&sr=1-2-e0fa1fdd-d857-4087-adda-5bd576b25987&i=aps&aref=p996soDSVX&ref_=sbx_s_sparkle_sbtcd_asin_1_img&pd_rd_w=4iEUP&content-id=amzn1.sym.c0c4f4ed-4ecc-4626-b0b0-d428311a6244%3Aamzn1.sym.c0c4f4ed-4ecc-4626-b0b0-d428311a6244&pf_rd_p=c0c4f4ed-4ecc-4626-b0b0-d428311a6244&pf_rd_r=8N5X88MQH0Q8VZPGA2A3&pd_rd_wg=EPfzf&pd_rd_r=88533a58-0ff0-4d73-a1af-82f313f10402"
+  }
+]
