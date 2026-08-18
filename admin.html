@@ -6,9 +6,9 @@
     <title>abhisales.in - Admin Panel</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
-        .login-box, .admin-panel { max-width: 800px; margin: 30px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .login-box, .admin-panel { max-width: 900px; margin: 30px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .hidden { display: none; }
-        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
         button { background: #198754; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 15px; }
         button:hover { background: #157347; }
         .danger-btn { background: #dc3545; padding: 5px 10px; font-size: 13px; }
@@ -20,6 +20,7 @@
         th { background: #343a40; color: white; }
         .flex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .back-link { display: inline-block; margin-bottom: 15px; color: #198754; text-decoration: none; font-weight: bold; }
+        .section-box { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e4e6eb; }
     </style>
 </head>
 <body>
@@ -28,8 +29,8 @@
         <a href="index.html" class="back-link">&larr; Back to abhisales.in</a>
         <h2>Admin Login</h2>
         <form id="loginForm">
-            <input type="text" id="username">
-            <input type="password" id="password">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
         <p id="loginMsg" style="color: red; margin-top: 10px;"></p>
@@ -37,11 +38,12 @@
 
     <div class="admin-panel hidden" id="adminSection">
         <div class="flex-header">
-            <h2>abhisales.in - Product Dashboard</h2>
+            <h2>abhisales.in - Admin Dashboard</h2>
             <button onclick="logout()" class="danger-btn">Logout</button>
         </div>
         <a href="index.html" class="back-link">&larr; Visit Website</a>
 
+        <!-- Product Form Section -->
         <h3 id="formTitle">Add New Product</h3>
         <form id="productForm">
             <input type="hidden" id="productId">
@@ -78,6 +80,32 @@
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
+
+        <!-- Slider Management Section -->
+        <div class="section-box">
+            <h3 id="sliderFormTitle">Add Homepage Slider Video</h3>
+            <form id="sliderForm">
+                <input type="hidden" id="sliderId">
+                <input type="text" id="sliderTitle" placeholder="Slider Heading (e.g. New Collection Showcase)" required>
+                <input type="text" id="sliderDesc" placeholder="Slider Description" required>
+                <input type="text" id="youtubeUrl" placeholder="YouTube Video URL or Embed Link (e.g. https://www.youtube.com/watch?v=...)" required>
+                <button type="submit" id="sliderSubmitBtn">Add Slider</button>
+                <button type="button" id="sliderCancelBtn" class="hidden" onclick="resetSliderForm()" style="background: #6c757d; margin-left: 10px;">Cancel</button>
+            </form>
+
+            <h3 style="margin-top: 30px;">Existing Sliders</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Video Link</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="sliderTableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -96,6 +124,7 @@
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('adminSection').classList.remove('hidden');
                 loadProducts();
+                loadSliders();
             } else {
                 document.getElementById('loginMsg').innerText = "Incorrect username or password";
             }
@@ -107,6 +136,7 @@
             document.getElementById('loginForm').reset();
         }
 
+        // --- Products Logic ---
         async function loadProducts() {
             const res = await fetch('/api/products');
             const products = await res.json();
@@ -182,6 +212,79 @@
                 const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
                 const data = await res.json();
                 if (data.success) loadProducts();
+            }
+        }
+
+        // --- Sliders Logic ---
+        async function loadSliders() {
+            const res = await fetch('/api/sliders');
+            const sliders = await res.json();
+            const tbody = document.getElementById('sliderTableBody');
+            if(sliders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No sliders found</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = sliders.map(s => `
+                <tr>
+                    <td>${s.title}</td>
+                    <td>${s.description}</td>
+                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${s.videoUrl}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editSlider('${s.id}', '${escapeStr(s.title)}', '${escapeStr(s.description)}', '${s.videoUrl}')">Edit</button>
+                        <button class="danger-btn" onclick="deleteSlider('${s.id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('sliderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('sliderId').value;
+            const slider = {
+                title: document.getElementById('sliderTitle').value,
+                description: document.getElementById('sliderDesc').value,
+                videoUrl: document.getElementById('youtubeUrl').value
+            };
+
+            const url = id ? `/api/sliders/${id}` : '/api/sliders';
+            const method = id ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(slider)
+            });
+            const data = await res.json();
+            if (data.success) {
+                resetSliderForm();
+                loadSliders();
+            }
+        });
+
+        function editSlider(id, title, description, videoUrl) {
+            document.getElementById('sliderId').value = id;
+            document.getElementById('sliderTitle').value = title;
+            document.getElementById('sliderDesc').value = description;
+            document.getElementById('youtubeUrl').value = videoUrl;
+
+            document.getElementById('sliderFormTitle').innerText = "Edit Slider Video";
+            document.getElementById('sliderSubmitBtn').innerText = "Update Slider";
+            document.getElementById('sliderCancelBtn').classList.remove('hidden');
+        }
+
+        function resetSliderForm() {
+            document.getElementById('sliderForm').reset();
+            document.getElementById('sliderId').value = "";
+            document.getElementById('sliderFormTitle').innerText = "Add Homepage Slider Video";
+            document.getElementById('sliderSubmitBtn').innerText = "Add Slider";
+            document.getElementById('sliderCancelBtn').classList.add('hidden');
+        }
+
+        async function deleteSlider(id) {
+            if (confirm("Delete this slider?")) {
+                const res = await fetch(`/api/sliders/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) loadSliders();
             }
         }
     </script>

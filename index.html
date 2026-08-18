@@ -149,30 +149,7 @@
         <div class="slider-wrapper">
             <div class="slider-container">
                 <div class="slider" id="slider">
-                    <!-- Video 1 -->
-                    <div class="slide">
-                        <div class="youtube-container">
-                            <iframe src="https://www.youtube.com/embed/LnvSNO-PUsg?autoplay=1&mute=1&loop=1&playlist=LnvSNO-PUsg&controls=0&showinfo=0&rel=0" 
-                                title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                        </div>
-                        <div class="slide-overlay">
-                            <h3>New Collection Showcase</h3>
-                            <p>Explore our latest gadgets and products in high quality.</p>
-                            <a href="#productGrid" class="shop-now-btn">Explore Now</a>
-                        </div>
-                    </div>
-                    <!-- Video 2 -->
-                    <div class="slide">
-                        <div class="youtube-container">
-                            <iframe src="https://www.youtube.com/embed/l3RyWY_PXTw?autoplay=1&mute=1&loop=1&playlist=l3RyWY_PXTw&controls=0&showinfo=0&rel=0" 
-                                title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                        </div>
-                        <div class="slide-overlay">
-                            <h3>Special Offer Showcase</h3>
-                            <p>Grab exclusive deals and discounts on top products.</p>
-                            <a href="#productGrid" class="shop-now-btn">Grab Deals</a>
-                        </div>
-                    </div>
+                    <!-- Dynamic Slider items will load here -->
                 </div>
             </div>
         </div>
@@ -259,6 +236,61 @@
         let searchQuery = '';
         let slideInterval;
 
+        async function fetchInitialData() {
+            await fetchSliders();
+            await fetchProducts();
+        }
+
+        async function fetchSliders() {
+            try {
+                const res = await fetch('/api/sliders');
+                const sliders = await res.json();
+                const sliderEl = document.getElementById('slider');
+                
+                if(sliders.length === 0) {
+                    sliderEl.innerHTML = `
+                        <div class="slide">
+                            <div class="slide-overlay">
+                                <h3>Welcome to abhisales.in</h3>
+                                <p>Explore our amazing collection of products.</p>
+                                <a href="#productGrid" class="shop-now-btn">Explore Now</a>
+                            </div>
+                        </div>`;
+                    return;
+                }
+
+                sliderEl.innerHTML = sliders.map(s => {
+                    let videoId = extractYouTubeId(s.videoUrl);
+                    let embedSrc = videoId 
+                        ? `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0`
+                        : s.videoUrl;
+
+                    return `
+                        <div class="slide">
+                            <div class="youtube-container">
+                                <iframe src="${embedSrc}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            </div>
+                            <div class="slide-overlay">
+                                <h3>${s.title}</h3>
+                                <p>${s.description}</p>
+                                <a href="#productGrid" class="shop-now-btn">Explore Now</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                startSliderTimer();
+            } catch(e) {
+                console.error("Error fetching sliders:", e);
+            }
+        }
+
+        function extractYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
         async function fetchProducts() {
             try {
                 const res = await fetch('/api/products');
@@ -271,7 +303,6 @@
             } catch (e) {
                 generateDummyData();
             }
-            startSliderTimer();
             filterAndRender();
         }
 
@@ -292,7 +323,7 @@
             const slides = slider.querySelectorAll('.slide');
             let slideIndex = 0;
             
-            if(slides.length === 0) return;
+            if(slides.length <= 1) return;
             
             if(slideInterval) clearInterval(slideInterval);
             
@@ -418,7 +449,7 @@
             filterAndRender();
         });
 
-        fetchProducts();
+        fetchInitialData();
     </script>
 </body>
 </html>
