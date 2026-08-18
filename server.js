@@ -29,6 +29,7 @@ app.post('/api/admin/login', (req, res) => {
 });
 
 const PRODUCTS_FILE = path.join(__dirname, 'products.json');
+const SLIDERS_FILE = path.join(__dirname, 'sliders.json');
 
 // Helper function to read products safely
 function getProducts() {
@@ -39,12 +40,20 @@ function getProducts() {
   return [];
 }
 
-// GitHub lo products.json ni auto-commit & update chese function
-async function updateGitHubProductsJSON(productsData) {
+// Helper function to read sliders safely
+function getSliders() {
+  if (fs.existsSync(SLIDERS_FILE)) {
+    const data = fs.readFileSync(SLIDERS_FILE, 'utf8');
+    return JSON.parse(data);
+  }
+  return [];
+}
+
+// Generic GitHub auto-commit & update function
+async function updateGitHubFile(filePath, fileData) {
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;
   const token = process.env.GITHUB_TOKEN;
-  const filePath = 'products.json';
 
   if (!token || !owner || !repo) {
     console.log('GitHub environment variables are missing. Skipping GitHub sync.');
@@ -65,9 +74,9 @@ async function updateGitHubProductsJSON(productsData) {
       throw new Error(`Failed to fetch file SHA from GitHub: ${getRes.statusText}`);
     }
 
-    const fileData = await getRes.json();
-    const sha = fileData.sha;
-    const contentEncoded = Buffer.from(JSON.stringify(productsData, null, 2)).toString('base64');
+    const resJson = await getRes.json();
+    const sha = resJson.sha;
+    const contentEncoded = Buffer.from(JSON.stringify(fileData, null, 2)).toString('base64');
 
     const putRes = await fetch(url, {
       method: 'PUT',
@@ -77,7 +86,7 @@ async function updateGitHubProductsJSON(productsData) {
         'User-Agent': 'Node.js-Server'
       },
       body: JSON.stringify({
-        message: 'Auto-update products.json from live server',
+        message: `Auto-update ${filePath} from live server`,
         content: contentEncoded,
         sha: sha
       })
@@ -88,13 +97,13 @@ async function updateGitHubProductsJSON(productsData) {
       throw new Error(`Failed to update GitHub: ${errText}`);
     }
 
-    console.log('Successfully synced products.json to GitHub!');
+    console.log(`Successfully synced ${filePath} to GitHub!`);
   } catch (error) {
-    console.error('Error updating GitHub products.json:', error.message);
+    console.error(`Error updating GitHub ${filePath}:`, error.message);
   }
 }
 
-// Get all products (GET)
+// --- Product APIs ---
 app.get('/api/products', (req, res) => {
   try {
     const products = getProducts();
@@ -104,7 +113,6 @@ app.get('/api/products', (req, res) => {
   }
 });
 
-// Add new product (POST)
 app.post('/api/products', async (req, res) => {
   try {
     const products = getProducts();
@@ -112,7 +120,7 @@ app.post('/api/products', async (req, res) => {
     products.push(newProduct);
     
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
-    await updateGitHubProductsJSON(products);
+    await updateGitHubFile('products.json', products);
 
     res.json({ success: true, message: 'Product added successfully', product: newProduct });
   } catch (error) {
@@ -120,7 +128,6 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
-// Update product by ID (PUT)
 app.put('/api/products/:id', async (req, res) => {
   try {
     const productId = req.params.id;
@@ -134,7 +141,7 @@ app.put('/api/products/:id', async (req, res) => {
     products[index] = { ...products[index], ...req.body, id: productId };
     
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
-    await updateGitHubProductsJSON(products);
+    await updateGitHubFile('products.json', products);
 
     res.json({ success: true, message: 'Product updated successfully' });
   } catch (error) {
@@ -142,7 +149,6 @@ app.put('/api/products/:id', async (req, res) => {
   }
 });
 
-// Delete product by ID (DELETE)
 app.delete('/api/products/:id', async (req, res) => {
   try {
     const productId = req.params.id;
@@ -155,9 +161,75 @@ app.delete('/api/products/:id', async (req, res) => {
     }
 
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(filteredProducts, null, 2));
-    await updateGitHubProductsJSON(filteredProducts);
+    await updateGitHubFile('products.json', filteredProducts);
 
     res.json({ success: true, message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// --- Slider APIs ---
+app.get('/api/sliders', (req, res) => {
+  try {
+    const sliders = getSliders();
+    res.json(sliders);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/sliders', async (req, res) => {
+  try {
+    const sliders = getSliders();
+    const newSlider = { id: Date.now().toString(), ...req.body };
+    sliders.push(newSlider);
+    
+    fs.writeFileSync(SLIDERS_FILE, JSON.stringify(sliders, null, 2));
+    await updateGitHubFile('sliders.json', sliders);
+
+    res.json({ success: true, message: 'Slider added successfully', slider: newSlider });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.put('/api/sliders/:id', async (req, res) => {
+  try {
+    const sliderId = req.params.id;
+    let sliders = getSliders();
+    
+    const index = sliders.findIndex(s => s.id == sliderId);
+    if (index === -1) {
+      return res.status(404).json({ success: false, message: 'Slider not found' });
+    }
+
+    sliders[index] = { ...sliders[index], ...req.body, id: sliderId };
+    
+    fs.writeFileSync(SLIDERS_FILE, JSON.stringify(sliders, null, 2));
+    await updateGitHubFile('sliders.json', sliders);
+
+    res.json({ success: true, message: 'Slider updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.delete('/api/sliders/:id', async (req, res) => {
+  try {
+    const sliderId = req.params.id;
+    let sliders = getSliders();
+    
+    const filteredSliders = sliders.filter(s => s.id != sliderId);
+    
+    if (filteredSliders.length === sliders.length) {
+      return res.status(404).json({ success: false, message: 'Slider not found' });
+    }
+
+    fs.writeFileSync(SLIDERS_FILE, JSON.stringify(filteredSliders, null, 2));
+    await updateGitHubFile('sliders.json', filteredSliders);
+
+    res.json({ success: true, message: 'Slider deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
