@@ -151,14 +151,34 @@
                     <td>${p.price}</td>
                     <td>${p.category}</td>
                     <td>
-                        <button class="edit-btn" onclick="editProduct('${p.id}', '${escapeStr(p.title)}', '${p.price}', '${p.category}', '${p.image}', '${p.link}')">Edit</button>
+                        <button class="edit-btn" onclick="editProductFromElement(this)" 
+                            data-id="${p.id}" 
+                            data-title="${escapeHtml(p.title)}" 
+                            data-price="${escapeHtml(p.price)}" 
+                            data-category="${escapeHtml(p.category)}" 
+                            data-image="${escapeHtml(p.image)}" 
+                            data-link="${escapeHtml(p.link)}">Edit</button>
                         <button class="danger-btn" onclick="deleteProduct('${p.id}')">Delete</button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function escapeStr(str) { return str.replace(/'/g, "&apos;"); }
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function editProductFromElement(btn) {
+            editProduct(
+                btn.dataset.id,
+                btn.dataset.title,
+                btn.dataset.price,
+                btn.dataset.category,
+                btn.dataset.image,
+                btn.dataset.link
+            );
+        }
 
         document.getElementById('productForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -230,11 +250,24 @@
                     <td>${s.description}</td>
                     <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${s.videoUrl}</td>
                     <td>
-                        <button class="edit-btn" onclick="editSlider('${s.id}', '${escapeStr(s.title)}', '${escapeStr(s.description)}', '${s.videoUrl}')">Edit</button>
+                        <button class="edit-btn" onclick="editSliderFromElement(this)" 
+                            data-id="${s.id}" 
+                            data-title="${escapeHtml(s.title)}" 
+                            data-description="${escapeHtml(s.description)}" 
+                            data-videourl="${escapeHtml(s.videoUrl)}">Edit</button>
                         <button class="danger-btn" onclick="deleteSlider('${s.id}')">Delete</button>
                     </td>
                 </tr>
             `).join('');
+        }
+
+        function editSliderFromElement(btn) {
+            editSlider(
+                btn.dataset.id,
+                btn.dataset.title,
+                btn.dataset.description,
+                btn.dataset.videourl
+            );
         }
 
         document.getElementById('sliderForm').addEventListener('submit', async (e) => {
