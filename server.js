@@ -1,84 +1,133 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const fetch = require('node-fetch'); // Node version older aithe idi kavali, v18+ aithe direct ga fetch vadocchu
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(express.json());
-// రూట్ డైరెక్టరీ నుంచే ఫైల్స్ సర్వ్ చేయడానికి:
-app.use(express.static(path.join(__dirname)));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public'))); // Mee frontend files unna folder name batti marchukondi
 
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "admin123";
+const PRODUCTS_FILE = path.join(__dirname, 'products.json');
 
-// అడ్మిన్ లాగిన్ API
-app.post('/api/admin/login', (req, res) => {
-    const { username, password } = req.body;
-    if (username === ADMIN_USER && password === ADMIN_PASS) {
-        res.json({ success: true });
+// GitHub lo products.json ni auto-commit & update chese function
+async function updateGitHubProductsJSON(productsData) {
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const token = process.env.GITHUB_TOKEN;
+  const filePath = 'products.json';
+
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+  try {
+    // 1. Get current SHA of products.json (GitHub requires SHA to update existing files)
+    const getRes = await fetch(url, {
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'NodeApp'
+      }
+    });
+
+    const fileData = await getRes.json();
+    const sha = fileData.sha;
+
+    // 2. Convert products JSON array to Base64
+    const updatedContent = Buffer.from(JSON.stringify(productsData, null, 2)).toString('base64');
+
+    // 3. Commit the new products.json directly to GitHub repository
+    const putRes = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'NodeApp'
+      },
+      body: JSON.stringify({
+        message: 'Update products.json automatically from live server',
+        content: updatedContent,
+        sha: sha
+      })
+    });
+
+    if (putRes.ok) {
+      console.log('GitHub products.json updated successfully!');
+      return true;
     } else {
-        res.status(401).json({ success: false, message: "Invalid credentials" });
+      const errRes = await putRes.json();
+      console.error('Failed to commit to GitHub:', errRes);
+      return false;
     }
-});
+  } catch (err) {
+    console.error('Error syncing with GitHub:', err);
+    return false;
+  }
+}
 
-// ప్రొడక్ట్స్ పొందడానికి API
+// 1. Get Products API
 app.get('/api/products', (req, res) => {
-    fs.readFile(path.join(__dirname, 'products.json'), 'utf8', (err, data) => {
-        if (err) res.status(500).json({ error: 'Failed to read data' });
-        else res.json(JSON.parse(data || '[]'));
-    });
+  fs.readFile(PRODUCTS_FILE, 'utf8', (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to read products file' });
+    }
+    res.json(JSON.parse(data));
+  });
 });
 
-// కొత్త ప్రొడక్ట్ యాడ్ చేయడానికి API
-app.post('/api/products', (req, res) => {
-    const newProduct = { id: Date.now().toString(), ...req.body };
-    const filePath = path.join(__dirname, 'products.json');
+// 2. Add Product API (Example)
+app.post('/api/products', async (req, res) => {
+  try {
+    const newProduct = req.body;
+    
+    // Read existing products
+    const fileData = fs.readFileSync(PRODUCTS_FILE, 'utf8');
+    let products = JSON.parse(fileData);
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        let products = (!err && data) ? JSON.parse(data) : [];
-        products.push(newProduct);
-        fs.writeFile(filePath, JSON.stringify(products, null, 2), (err) => {
-            if (err) res.status(500).json({ error: 'Failed to save' });
-            else res.json({ success: true, product: newProduct });
-        });
-    });
+    // Add new product
+    products.push(newProduct);
+
+    // Write locally to server temporary storage
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
+
+    // Sync changes to GitHub so it stays permanent across Render redeploys
+    await updateGitHubProductsJSON(products);
+
+    res.json({ success: true, message: 'Product added successfully and synced!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'Server error while adding product' });
+  }
 });
 
-// ప్రొడక్ట్ ఎడిట్ (Update) చేయడానికి API
-app.put('/api/products/:id', (req, res) => {
+// 3. Delete Product API (Example)
+app.delete('/api/products/:id', async (req, res) => {
+  try {
     const productId = req.params.id;
-    const updatedData = req.body;
-    const filePath = path.join(__dirname, 'products.json');
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) return res.status(500).json({ error: 'Failed to read' });
-        let products = JSON.parse(data || '[]');
-        products = products.map(p => p.id === productId ? { ...p, ...updatedData } : p);
+    // Read existing products
+    const fileData = fs.readFileSync(PRODUCTS_FILE, 'utf8');
+    let products = JSON.parse(fileData);
 
-        fs.writeFile(filePath, JSON.stringify(products, null, 2), (err) => {
-            if (err) return res.status(500).json({ error: 'Failed to update' });
-            res.json({ success: true });
-        });
-    });
-});
+    // Filter out the product to delete
+    products = products.filter(p => p.id !== productId);
 
-// ప్రొడక్ట్ డిలీట్ చేయడానికి API
-app.delete('/api/products/:id', (req, res) => {
-    const productId = req.params.id;
-    const filePath = path.join(__dirname, 'products.json');
+    // Write locally
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) return res.status(500).json({ error: 'Failed to read' });
-        let products = JSON.parse(data || '[]');
-        products = products.filter(p => p.id !== productId);
+    // Sync changes to GitHub
+    await updateGitHubProductsJSON(products);
 
-        fs.writeFile(filePath, JSON.stringify(products, null, 2), (err) => {
-            if (err) return res.status(500).json({ error: 'Failed to delete' });
-            res.json({ success: true });
-        });
-    });
+    res.json({ success: true, message: 'Product deleted successfully and synced!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'Server error while deleting product' });
+  }
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
