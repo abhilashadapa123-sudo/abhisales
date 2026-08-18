@@ -21,7 +21,6 @@ app.get('/', (req, res) => {
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
   
-  // Mee admin credentials ikkada match chesukondi
   if (username === 'admin' && password === 'admin123') {
     res.json({ success: true, message: 'Login successful' });
   } else {
@@ -30,6 +29,20 @@ app.post('/api/admin/login', (req, res) => {
 });
 
 const PRODUCTS_FILE = path.join(__dirname, 'products.json');
+
+// Get all products (GET Route)
+app.get('/api/products', (req, res) => {
+  try {
+    if (fs.existsSync(PRODUCTS_FILE)) {
+      const data = fs.readFileSync(PRODUCTS_FILE, 'utf8');
+      res.json(JSON.parse(data));
+    } else {
+      res.json([]);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // GitHub lo products.json ni auto-commit & update chese function
 async function updateGitHubProductsJSON(productsData) {
@@ -90,7 +103,7 @@ async function updateGitHubProductsJSON(productsData) {
   }
 }
 
-// Example products API update endpoint (if you have one for adding/deleting products)
+// Add/Update products endpoint (POST Route)
 app.post('/api/products', async (req, res) => {
   try {
     const newProducts = req.body;
