@@ -30,19 +30,14 @@ app.post('/api/admin/login', (req, res) => {
 
 const PRODUCTS_FILE = path.join(__dirname, 'products.json');
 
-// Get all products (GET Route)
-app.get('/api/products', (req, res) => {
-  try {
-    if (fs.existsSync(PRODUCTS_FILE)) {
-      const data = fs.readFileSync(PRODUCTS_FILE, 'utf8');
-      res.json(JSON.parse(data));
-    } else {
-      res.json([]);
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+// Helper function to read products safely
+function getProducts() {
+  if (fs.existsSync(PRODUCTS_FILE)) {
+    const data = fs.readFileSync(PRODUCTS_FILE, 'utf8');
+    return JSON.parse(data);
   }
-});
+  return [];
+}
 
 // GitHub lo products.json ni auto-commit & update chese function
 async function updateGitHubProductsJSON(productsData) {
@@ -59,7 +54,6 @@ async function updateGitHubProductsJSON(productsData) {
   const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
 
   try {
-    // 1. Get current file SHA (required by GitHub API to update files)
     const getRes = await fetch(url, {
       headers: {
         'Authorization': `token ${token}`,
@@ -73,11 +67,8 @@ async function updateGitHubProductsJSON(productsData) {
 
     const fileData = await getRes.json();
     const sha = fileData.sha;
-
-    // 2. Encode content to Base64
     const contentEncoded = Buffer.from(JSON.stringify(productsData, null, 2)).toString('base64');
 
-    // 3. Send PUT request to update file on GitHub
     const putRes = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -103,18 +94,70 @@ async function updateGitHubProductsJSON(productsData) {
   }
 }
 
-// Add/Update products endpoint (POST Route)
+// Get all products (GET)
+app.get('/api/products', (req, res) => {
+  try {
+    const products = getProducts();
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Add new product (POST)
 app.post('/api/products', async (req, res) => {
   try {
-    const newProducts = req.body;
+    const products = getProducts();
+    const newProduct = { id: Date.now().toString(), ...req.body };
+    products.push(newProduct);
     
-    // Save locally
-    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(newProducts, null, 2));
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
+    await updateGitHubProductsJSON(products);
 
-    // Sync to GitHub
-    await updateGitHubProductsJSON(newProducts);
+    res.json({ success: true, message: 'Product added successfully', product: newProduct });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
-    res.json({ success: true, message: 'Products updated and synced successfully' });
+// Update product by ID (PUT)
+app.put('/api/products/:id', async (req, res) => {
+  try {
+    const productId = req.params.id;
+    let products = getProducts();
+    
+    const index = products.findIndex(p => p.id == productId);
+    if (index === -1) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    products[index] = { ...products[index], ...req.body, id: productId };
+    
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
+    await updateGitHubProductsJSON(products);
+
+    res.json({ success: true, message: 'Product updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Delete product by ID (DELETE)
+app.delete('/api/products/:id', async (req, res) => {
+  try {
+    const productId = req.params.id;
+    let products = getProducts();
+    
+    const filteredProducts = products.filter(p => p.id != productId);
+    
+    if (filteredProducts.length === products.length) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(filteredProducts, null, 2));
+    await updateGitHubProductsJSON(filteredProducts);
+
+    res.json({ success: true, message: 'Product deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
