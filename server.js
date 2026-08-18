@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
   
-  if (username === 'admin' && password === 'admin123') {
+  if (username === 'AHTIJAR@1997' && password === 'ahtijar@1997') {
     res.json({ success: true, message: 'Login successful' });
   } else {
     res.status(401).json({ success: false, message: 'Invalid credentials' });
