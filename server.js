@@ -116,7 +116,15 @@ app.get('/api/products', (req, res) => {
 app.post('/api/products', async (req, res) => {
   try {
     const products = getProducts();
-    const newProduct = { id: Date.now().toString(), ...req.body };
+    const newProduct = { 
+      id: Date.now().toString(), 
+      title: req.body.title,
+      price: req.body.price,
+      category: req.body.category,
+      image: req.body.image,
+      link: req.body.link,
+      videoUrl: req.body.videoUrl || '' // ఇది వీడియో లింక్‌ని సేవ్ చేస్తుంది[cite: 4]
+    };
     products.push(newProduct);
     
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
@@ -138,7 +146,15 @@ app.put('/api/products/:id', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    products[index] = { ...products[index], ...req.body, id: productId };
+    products[index] = { 
+      id: productId, 
+      title: req.body.title,
+      price: req.body.price,
+      category: req.body.category,
+      image: req.body.image,
+      link: req.body.link,
+      videoUrl: req.body.videoUrl || '' // ఇది ఎడిట్ చేసినప్పుడు వీడియో లింక్‌ని అప్‌డేట్ చేస్తుంది[cite: 4]
+    };
     
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
     await updateGitHubFile('products.json', products);
@@ -182,7 +198,12 @@ app.get('/api/sliders', (req, res) => {
 app.post('/api/sliders', async (req, res) => {
   try {
     const sliders = getSliders();
-    const newSlider = { id: Date.now().toString(), ...req.body };
+    const newSlider = { 
+      id: Date.now().toString(), 
+      title: req.body.title,
+      description: req.body.description,
+      videoUrl: req.body.videoUrl 
+    };
     sliders.push(newSlider);
     
     fs.writeFileSync(SLIDERS_FILE, JSON.stringify(sliders, null, 2));
@@ -204,7 +225,12 @@ app.put('/api/sliders/:id', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Slider not found' });
     }
 
-    sliders[index] = { ...sliders[index], ...req.body, id: sliderId };
+    sliders[index] = { 
+      id: sliderId, 
+      title: req.body.title,
+      description: req.body.description,
+      videoUrl: req.body.videoUrl 
+    };
     
     fs.writeFileSync(SLIDERS_FILE, JSON.stringify(sliders, null, 2));
     await updateGitHubFile('sliders.json', sliders);

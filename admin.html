@@ -64,6 +64,7 @@
             </select>
             <input type="text" id="image" placeholder="Image URL" required>
             <input type="url" id="link" placeholder="Affiliate Buy Link" required>
+            <input type="url" id="productVideoUrl" placeholder="YouTube Video URL (Optional)">
             <button type="submit" id="submitBtn">Add Product</button>
             <button type="button" id="cancelBtn" class="hidden" onclick="resetForm()" style="background: #6c757d; margin-left: 10px;">Cancel</button>
         </form>
@@ -157,7 +158,8 @@
                             data-price="${escapeHtml(p.price)}" 
                             data-category="${escapeHtml(p.category)}" 
                             data-image="${escapeHtml(p.image)}" 
-                            data-link="${escapeHtml(p.link)}">Edit</button>
+                            data-link="${escapeHtml(p.link)}"
+                            data-videourl="${escapeHtml(p.videoUrl || '')}">Edit</button>
                         <button class="danger-btn" onclick="deleteProduct('${p.id}')">Delete</button>
                     </td>
                 </tr>
@@ -176,7 +178,8 @@
                 btn.dataset.price,
                 btn.dataset.category,
                 btn.dataset.image,
-                btn.dataset.link
+                btn.dataset.link,
+                btn.dataset.videourl
             );
         }
 
@@ -188,7 +191,8 @@
                 price: document.getElementById('price').value,
                 category: document.getElementById('category').value,
                 image: document.getElementById('image').value,
-                link: document.getElementById('link').value
+                link: document.getElementById('link').value,
+                videoUrl: document.getElementById('productVideoUrl').value
             };
 
             const url = id ? `/api/products/${id}` : '/api/products';
@@ -206,13 +210,14 @@
             }
         });
 
-        function editProduct(id, title, price, category, image, link) {
+        function editProduct(id, title, price, category, image, link, videoUrl) {
             document.getElementById('productId').value = id;
             document.getElementById('title').value = title;
             document.getElementById('price').value = price;
             document.getElementById('category').value = category;
             document.getElementById('image').value = image;
             document.getElementById('link').value = link;
+            document.getElementById('productVideoUrl').value = videoUrl || '';
 
             document.getElementById('formTitle').innerText = "Edit Product";
             document.getElementById('submitBtn').innerText = "Update Product";
@@ -222,6 +227,7 @@
         function resetForm() {
             document.getElementById('productForm').reset();
             document.getElementById('productId').value = "";
+            document.getElementById('productVideoUrl').value = "";
             document.getElementById('formTitle').innerText = "Add New Product";
             document.getElementById('submitBtn').innerText = "Add Product";
             document.getElementById('cancelBtn').classList.add('hidden');
