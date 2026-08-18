@@ -3,7 +3,7 @@
     "id": "1787026431104",
     "title": " Hooded Sweatshirt Pullovers for Men & Women(Pack of 1)",
     "price": "₹399",
-    "category": "Cloths",
+    "category": "mobiles",
     "image": "https://m.media-amazon.com/images/I/61SxOiwtw5L._AC_UL480_FMwebp_QL65_.jpg",
     "link": "https://link.amazon/B08ZCAN79"
   },
@@ -24,11 +24,19 @@
     "link": "https://link.amazon/B0e9VokYP"
   },
   {
-    "id": "1787059496763",
-    "title": "L'Oréal Paris Glycolic Bright Day Cream with SPF 17, 50ml",
+    "id": "1787060285504",
+    "title": "L'Oréal Paris Glycolic Bright Day Cream with SPF 17, 50ml Visit the L'Oreal Paris Store",
     "price": "₹503",
     "category": "Beauty",
-    "image": "https://m.media-amazon.com/images/I/51MS4k2nCQL._AC_UL480_FMwebp_QL65_.jpg",
-    "link": "https://link.amazon/B00AJmDvl"
+    "image": "https://m.media-amazon.com/images/I/31UpREua4NL._MCnd_AC_.jpg",
+    "link": "https://link.amazon/B04BAWnau"
+  },
+  {
+    "id": "1787060829223",
+    "title": "L'Oreal Paris Glycolic Bright 8% [Melasyl + Niacinamide] Face Serum for Brightening Dark Spots 30ml",
+    "price": "₹329",
+    "category": "Laptops",
+    "image": "https://images-eu.ssl-images-amazon.com/images/I/41TZAey3z+L._AC_UL232_SR232,232_.jpg",
+    "link": "https://link.amazon/B0g5ip2UU"
   }
 ]

@@ -330,18 +330,18 @@
                 return;
             }
 
-            grid.innerHTML = pageItems.map(p => `
+            grid.innerHTML = pageItems.map((p, index) => `
                 <div class="product-card">
                     <div>
-                        <div class="image-box" onclick="openModal('${encodeURIComponent(p.title)}', '${p.price}', '${p.category}', '${p.image}', '${p.link}')">
+                        <div class="image-box" onclick="openModalFromData(${index})">
                             <img src="${p.image}" alt="${p.title}">
                         </div>
-                        <h3 onclick="openModal('${encodeURIComponent(p.title)}', '${p.price}', '${p.category}', '${p.image}', '${p.link}')">${p.title}</h3>
+                        <h3 onclick="openModalFromData(${index})">${p.title}</h3>
                     </div>
                     <div>
                         <div class="product-info">
                             <p>${p.price}</p>
-                            <button class="btn-buy" onclick="openModal('${encodeURIComponent(p.title)}', '${p.price}', '${p.category}', '${p.image}', '${p.link}')">View / Buy</button>
+                            <button class="btn-buy" onclick="openModalFromData(${index})">View / Buy</button>
                         </div>
                     </div>
                 </div>
@@ -350,8 +350,21 @@
             renderPagination(filtered.length);
         }
 
+        function openModalFromData(index) {
+            let filtered = allProducts.filter(p => {
+                let matchCat = currentCategory === 'All' || p.category.toLowerCase() === currentCategory.toLowerCase();
+                let matchSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchCat && matchSearch;
+            });
+            const start = (currentPage - 1) * itemsPerPage;
+            const p = filtered[start + index];
+            if(p) {
+                openModal(p.title, p.price, p.category, p.image, p.link);
+            }
+        }
+
         function openModal(title, price, category, image, link) {
-            document.getElementById('modalTitle').innerText = decodeURIComponent(title);
+            document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalPrice').innerText = price;
             document.getElementById('modalCategory').innerText = category;
             document.getElementById('modalImg').src = image;
