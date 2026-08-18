@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch'); // Node version older aithe idi kavali, v18+ aithe direct ga fetch vadocchu
+// Node version older aithe idi kavali, v18+ aithe direct ga fetch vadocchu
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // Mee frontend files unna folder name batti marchukondi
+app.use(express.static(__dirname)); // Mee frontend files unna folder name batti marchukondi
 
 const PRODUCTS_FILE = path.join(__dirname, 'products.json');
 
