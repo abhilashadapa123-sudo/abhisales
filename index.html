@@ -131,7 +131,6 @@
         .footer-col p, .footer-col ul { list-style: none; line-height: 1.8; }
         .footer-col ul li a { color: #606770; text-decoration: none; transition: 0.2s; }
         .footer-col ul li a:hover { color: #0084ff; text-decoration: underline; }
-        .footer-col ul li a:hover { color: #0084ff; text-decoration: underline; }
         .footer-bottom { max-width: 1200px; margin: 20px auto 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; color: #606770; font-size: 12px; }
         .footer-admin-link { color: #0084ff; font-weight: 600; text-decoration: none; }
         .footer-admin-link:hover { text-decoration: underline; }
@@ -423,17 +422,36 @@
             }
         }
 
-        // WhatsApp Share Function
+        // Updated WhatsApp Share Function with direct product link query
         function shareOnWhatsApp() {
             const title = document.getElementById('modalTitle').innerText;
             const price = document.getElementById('modalPrice').innerText;
-            const buyLink = document.getElementById('modalBuyBtn').href;
             
-            const message = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nBuy/View here: ${buyLink}`;
+            const baseUrl = window.location.origin + window.location.pathname;
+            const productLink = `${baseUrl}?product=${encodeURIComponent(title)}`;
+            
+            const message = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nView details here: ${productLink}`;
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
             
             window.open(whatsappUrl, '_blank');
         }
+
+        // Auto Open Modal when link with product query is opened
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedProduct = urlParams.get('product');
+                if (sharedProduct && allProducts.length > 0) {
+                    const foundIndex = allProducts.findIndex(p => p.title.toLowerCase() === decodeURIComponent(sharedProduct).toLowerCase());
+                    if (foundIndex !== -1) {
+                        currentPage = Math.floor(foundIndex / itemsPerPage) + 1;
+                        filterAndRender();
+                        const cardIndex = foundIndex % itemsPerPage;
+                        openModalFromData(cardIndex);
+                    }
+                }
+            }, 500);
+        });
 
         function renderPagination(totalItems) {
             const pag = document.getElementById('pagination');
