@@ -162,9 +162,7 @@
         <!-- YouTube Video Slider Section -->
         <div class="slider-wrapper">
             <div class="slider-container">
-                <div class="slider" id="slider">
-                    <!-- Dynamic Slider items will load here -->
-                </div>
+                <div class="slider" id="slider"></div>
             </div>
         </div>
 
@@ -208,7 +206,7 @@
                     <div class="modal-price" id="modalPrice">₹0</div>
                     <div class="modal-actions">
                         <a href="#" id="modalBuyBtn" target="_blank" class="modal-buy-btn">Buy Now</a>
-                        <button onclick="copyImageAndShare()" class="modal-whatsapp-btn">Copy Image & Share on WA</button>
+                        <button onclick="copyImageAndShare()" class="modal-whatsapp-btn">Share on WhatsApp Status</button>
                     </div>
                 </div>
             </div>
@@ -216,7 +214,7 @@
     </div>
 
     <!-- Toast Notification -->
-    <div class="toast" id="toastNotification">Image Copied! Now Paste in WhatsApp.</div>
+    <div class="toast" id="toastNotification">Preparing share options...</div>
 
     <!-- Footer -->
     <footer>
@@ -451,22 +449,42 @@
             
             const baseUrl = window.location.origin + window.location.pathname;
             const productLink = `${baseUrl}?product=${encodeURIComponent(title)}`;
-            
+            const shareText = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nView details here: ${productLink}`;
+
+            // మొబైల్ డివైస్‌లలో నేరుగా ఫొటో + లింక్ షేర్ చేయడానికి (Native Share API)
+            if (navigator.share) {
+                try {
+                    const response = await fetch(imageUrl);
+                    const blob = await response.blob();
+                    const file = new File([blob], 'product.jpg', { type: blob.type });
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            title: title,
+                            text: shareText,
+                            files: [file],
+                        });
+                        return;
+                    }
+                } catch (err) {
+                    console.log('Native share failed, falling back...', err);
+                }
+            }
+
+            // ఒకవేళ పీసీ (PC) లేదా సపోర్ట్ చేయని బ్రౌజర్ అయితే ఇమేజ్ కాపీ చేసి వాట్సాప్ ఓపెన్ అవుతుంది
             try {
                 const response = await fetch(imageUrl);
                 const blob = await response.blob();
                 await navigator.clipboard.write([
                     new ClipboardItem({ [blob.type]: blob })
                 ]);
-                showToast("Image Copied! Now Paste (Ctrl+V) in WhatsApp chat.");
+                showToast("Image Copied! Now Paste in WhatsApp.");
             } catch (err) {
-                console.error('Could not copy image: ', err);
-                showToast("Sharing link to WhatsApp...");
+                showToast("Opening WhatsApp...");
             }
 
             setTimeout(() => {
-                const message = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nView details here: ${productLink}`;
-                const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+                const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
                 window.open(whatsappUrl, '_blank');
             }, 1000);
         }
