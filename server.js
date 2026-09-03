@@ -12,8 +12,51 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from the root directory
 app.use(express.static(__dirname));
 
-// Root route to serve index.html explicitly
+// Root route updated to support WhatsApp Rich Previews (Open Graph Meta Tags)
 app.get('/', (req, res) => {
+  const productName = req.query.product;
+  
+  if (productName) {
+    try {
+      const products = getProducts();
+      // కేవలం టైటిల్ సరిపోల్చడం (మ్యాచింగ్) ద్వారా ప్రొడక్ట్ వెతకడం
+      const product = products.find(p => p.title.toLowerCase() === decodeURIComponent(productName).toLowerCase());
+      
+      if (product) {
+        // వాట్సాప్ లేదా సోషల్ మీడియా బాట్ కోసం Open Graph మెటా ట్యాగ్స్‌తో రెస్పాన్స్ పంపడం
+        return res.send(`
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>${product.title} - abhisales.in</title>
+              
+              <!-- Open Graph Meta Tags for WhatsApp & Social Media Preview -->
+              <meta property="property" content="og:title" content="${product.title}" />
+              <meta property="og:description" content="Price: ${product.price} | Buy now on abhisales.in" />
+              <meta property="og:image" content="${product.image}" />
+              <meta property="og:url" content="${req.protocol}://${req.get('host')}${req.originalUrl}" />
+              <meta property="og:type" content="website" />
+
+              <!-- Automatic redirect to the main index page with product query so frontend modal opens -->
+              <meta http-equiv="refresh" content="0;url=/?product=${encodeURIComponent(product.title)}">
+          </head>
+          <body>
+              <p>Redirecting to product details...</p>
+              <script>
+                  window.location.href = "/?product=${encodeURIComponent(product.title)}";
+              </script>
+          </body>
+          </html>
+        `);
+      }
+    } catch (err) {
+      console.error("Error serving Open Graph preview:", err);
+    }
+  }
+
+  // సాధారణంగా హోమ్‌పేజీ ఓపెన్ అయినప్పుడు index.html ఫైల్ పంపడం
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -123,7 +166,7 @@ app.post('/api/products', async (req, res) => {
       category: req.body.category,
       image: req.body.image,
       link: req.body.link,
-      videoUrl: req.body.videoUrl || '' // ఇది వీడియో లింక్‌ని సేవ్ చేస్తుంది[cite: 4]
+      videoUrl: req.body.videoUrl || '' // ఇది వీడియో లింక్‌ని సేవ్ చేస్తుంది
     };
     products.push(newProduct);
     
@@ -153,7 +196,7 @@ app.put('/api/products/:id', async (req, res) => {
       category: req.body.category,
       image: req.body.image,
       link: req.body.link,
-      videoUrl: req.body.videoUrl || '' // ఇది ఎడిట్ చేసినప్పుడు వీడియో లింక్‌ని అప్‌డేట్ చేస్తుంది[cite: 4]
+      videoUrl: req.body.videoUrl || '' // ఇది ఎడిట్ చేసినప్పుడు వీడియో లింక్‌ని అప్‌డేట్ చేస్తుంది
     };
     
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
@@ -246,7 +289,7 @@ app.delete('/api/sliders/:id', async (req, res) => {
     const sliderId = req.params.id;
     let sliders = getSliders();
     
-    const filteredSliders = sliders.filter(s => s.id != sliderId);
+    The filteredSliders = sliders.filter(s => s.id != sliderId);
     
     if (filteredSliders.length === sliders.length) {
       return res.status(404).json({ success: false, message: 'Slider not found' });
