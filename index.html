@@ -88,13 +88,8 @@
         }
         .image-box img { max-width: 100%; max-height: 100%; object-fit: contain; transition: 0.3s ease; }
         .product-card:hover .image-box img { transform: scale(1.06); }
-        .product-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1c1e21; height: 38px; overflow: hidden; line-height: 1.3; cursor: pointer; }
+        .product-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #1c1e21; height: 38px; overflow: hidden; line-height: 1.3; cursor: pointer; }
         .product-card h3:hover { color: #0084ff; }
-        
-        /* Product Card Stats */
-        .card-stats { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #606770; margin-bottom: 8px; }
-        .like-btn-card { background: none; border: none; cursor: pointer; font-size: 13px; color: #606770; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
-        .like-btn-card:hover { color: #ff3b30; }
 
         .product-info { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; border-top: 1px solid #f0f2f5; padding-top: 10px; }
         .product-card p { color: #00a400; font-weight: 700; font-size: 15px; }
@@ -121,13 +116,9 @@
         .modal-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .modal-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .modal-details h2 { font-size: 20px; color: #1c1e21; margin-bottom: 8px; line-height: 1.4; }
-        .modal-category { display: inline-block; background: rgba(0,132,255,0.1); color: #0084ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 10px; width: fit-content; }
+        .modal-category { display: inline-block; background: rgba(0,132,255,0.1); color: #0084ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 15px; width: fit-content; }
         
-        .modal-stats { display: flex; gap: 15px; align-items: center; font-size: 13px; color: #606770; margin-bottom: 12px; }
-        .modal-like-btn { background: #f0f2f5; border: 1px solid #ccd0d5; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: 0.2s; color: #1c1e21; }
-        .modal-like-btn:hover { background: #ffebee; color: #ff3b30; border-color: #ff3b30; }
-
-        .modal-price { font-size: 24px; color: #00a400; font-weight: 800; margin-bottom: 15px; }
+        .modal-price { font-size: 24px; color: #00a400; font-weight: 800; margin-bottom: 20px; }
         
         .modal-actions { display: flex; flex-direction: column; gap: 10px; }
         .modal-buy-btn { background: #0084ff; color: #fff; text-align: center; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: block; transition: 0.2s; }
@@ -150,9 +141,8 @@
         .page-btn:hover { background: #0084ff; color: #fff; border-color: #0084ff; }
         .page-info { margin: 0 15px; font-weight: 600; font-size: 14px; color: #606770; }
         
-        /* Footer & Total Visitor Counter Banner */
+        /* Footer */
         footer { background: #f0f2f5; color: #4b4f56; border-top: 1px solid #e4e6eb; padding: 40px 20px 20px 20px; font-size: 13px; margin-top: auto; }
-        .visitor-counter-banner { text-align: center; background: #ffffff; border: 1px solid #e4e6eb; padding: 12px; border-radius: 8px; margin-bottom: 30px; font-weight: 600; color: #1c1e21; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; padding-bottom: 30px; border-bottom: 1px solid #ccd0d5; }
         .footer-col h4 { color: #1c1e21; font-size: 16px; margin-bottom: 15px; font-weight: 700; }
         .footer-col p, .footer-col ul { list-style: none; line-height: 1.8; }
@@ -229,12 +219,6 @@
                 <div>
                     <span class="modal-category" id="modalCategory">Category</span>
                     <h2 id="modalTitle">Product Title</h2>
-                    <div class="modal-stats">
-                        <span>👁️ Views: <b id="modalViews">0</b></span>
-                        <button class="modal-like-btn" id="modalLikeBtn" onclick="likeActiveProduct()">
-                            ❤️ Like <span id="modalLikes">0</span>
-                        </button>
-                    </div>
                 </div>
                 <div>
                     <div class="modal-price" id="modalPrice">₹0</div>
@@ -252,11 +236,6 @@
 
     <!-- Footer -->
     <footer>
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <div class="visitor-counter-banner">
-                👀 Total Website Visitors: <span id="siteVisitCount" style="color: #0084ff;">Loading...</span>
-            </div>
-        </div>
         <div class="footer-content">
             <div class="footer-col">
                 <h4>About abhisales.in</h4>
@@ -295,26 +274,6 @@
         let searchQuery = '';
         let slideInterval;
         let activeProductIndex = null;
-
-        // Reliable Visitor Counter using CountAPI / fallback local storage
-        async function updateVisitorCount() {
-            try {
-                const res = await fetch('https://api.countapi.xyz/hit/abhisales.in/visits');
-                const data = await res.json();
-                if(data && data.value) {
-                    document.getElementById('siteVisitCount').innerText = data.value;
-                } else {
-                    throw new Error();
-                }
-            } catch (e) {
-                // Fallback simulation counter if external API fails
-                let visits = localStorage.getItem('abhisales_visits') || 1245;
-                visits = parseInt(visits) + 1;
-                localStorage.setItem('abhisales_visits', visits);
-                document.getElementById('siteVisitCount').innerText = visits;
-            }
-        }
-        updateVisitorCount();
 
         async function fetchInitialData() {
             await fetchSliders();
@@ -383,11 +342,6 @@
             } catch (e) {
                 generateDummyData();
             }
-            
-            allProducts.forEach((p) => {
-                if (p.views === undefined) p.views = Math.floor(Math.random() * 50) + 10;
-                if (p.likes === undefined) p.likes = Math.floor(Math.random() * 10);
-            });
 
             filterAndRender();
             checkSharedProductUrl();
@@ -401,9 +355,7 @@
                 price: `₹${(i + 1) * 99}`,
                 category: cats[i % cats.length],
                 image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
-                link: '#',
-                views: Math.floor(Math.random() * 50) + 5,
-                likes: Math.floor(Math.random() * 15)
+                link: '#'
             }));
         }
 
@@ -459,12 +411,6 @@
                                 <img src="${p.image}" alt="${p.title}">
                             </div>
                             <h3 onclick="openModalFromData(${absoluteIndex})">${p.title}</h3>
-                            <div class="card-stats">
-                                <span>👁️ ${p.views} Views</span>
-                                <button class="like-btn-card" onclick="likeCardProduct(${absoluteIndex}, event)">
-                                    ❤️ <span>${p.likes}</span>
-                                </button>
-                            </div>
                         </div>
                         <div>
                             <div class="product-info">
@@ -479,43 +425,25 @@
             renderPagination(filtered.length);
         }
 
-        function likeCardProduct(globalIndex, event) {
-            event.stopPropagation();
-            allProducts[globalIndex].likes += 1;
-            filterAndRender();
-        }
-
         function openModalFromData(globalIndex) {
             activeProductIndex = globalIndex;
             const p = allProducts[globalIndex];
             if(p) {
-                p.views += 1;
-                openModal(p.title, p.price, p.category, p.image, p.link, p.views, p.likes);
-                filterAndRender();
+                openModal(p.title, p.price, p.category, p.image, p.link);
             }
         }
 
-        function openModal(title, price, category, image, link, views, likes) {
+        function openModal(title, price, category, image, link) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalPrice').innerText = price;
             document.getElementById('modalCategory').innerText = category;
             document.getElementById('modalImg').src = image;
             document.getElementById('modalBuyBtn').href = link;
-            document.getElementById('modalViews').innerText = views;
-            document.getElementById('modalLikes').innerText = likes;
             
             const baseUrl = window.location.origin + window.location.pathname;
             document.getElementById('modalImgLink').href = `${baseUrl}?product=${encodeURIComponent(title)}`;
             
             document.getElementById('productModal').style.display = 'flex';
-        }
-
-        function likeActiveProduct() {
-            if (activeProductIndex !== null) {
-                allProducts[activeProductIndex].likes += 1;
-                document.getElementById('modalLikes').innerText = allProducts[activeProductIndex].likes;
-                filterAndRender();
-            }
         }
 
         function closeModal() {
@@ -614,7 +542,7 @@
             pag.innerHTML = `
                 ${currentPage > 1 ? `<button class="page-btn" onclick="changePage(-1)">Previous</button>` : ''}
                 <span class="page-info">Page ${currentPage} of ${totalPages}</span>
-                ${currentPage < totalPages ? `<button class="page_btn" onclick="changePage(1)">Next Page</button>` : ''}
+                ${currentPage < totalPages ? `<button class="page-btn" onclick="changePage(1)">Next Page</button>` : ''}
             `;
         }
 
@@ -627,7 +555,6 @@
         function filterCategory(cat) {
             currentCategory = cat;
             currentPage = 1;
-            document.querySelectorAll('.cat-item').get?.() // safe selector
             document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
             event.target.classList.add('active');
             filterAndRender();
