@@ -195,7 +195,6 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <div class="modal-img-box">
-                <!-- మోడల్ లోపలి ఇమేజ్ కి లింక్ ట్యాగ్ జోడించబడింది -->
                 <a id="modalImgLink" href="#" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
                     <img id="modalImg" src="" alt="">
                 </a>
@@ -327,8 +326,6 @@
                 generateDummyData();
             }
             filterAndRender();
-            
-            // Check URL query and open modal accurately after rendering products
             checkSharedProductUrl();
         }
 
@@ -427,15 +424,14 @@
             document.getElementById('modalImg').src = image;
             document.getElementById('modalBuyBtn').href = link;
             
-            // మోడల్ లోపలి ఇమేజ్ కి కూడా లింక్ సెట్ చేయడం జరిగింది
-            document.getElementById('modalImgLink').href = `/?product=${encodeURIComponent(title)}`;
+            const baseUrl = window.location.origin + window.location.pathname;
+            document.getElementById('modalImgLink').href = `${baseUrl}?product=${encodeURIComponent(title)}`;
             
             document.getElementById('productModal').style.display = 'flex';
         }
 
         function closeModal() {
             document.getElementById('productModal').style.display = 'none';
-            // Clear URL query parameter without reloading page so normal clicks work fine afterwards
             if (window.history.replaceState) {
                 const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                 window.history.replaceState({path: cleanUrl}, '', cleanUrl);
@@ -448,7 +444,6 @@
             }
         }
 
-        // Copy Image to Clipboard and Open WhatsApp with Link
         async function copyImageAndShare() {
             const title = document.getElementById('modalTitle').innerText;
             const price = document.getElementById('modalPrice').innerText;
@@ -485,7 +480,6 @@
             }, 3500);
         }
 
-        // Improved URL handler to reliably open product modal on load
         function checkSharedProductUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const sharedProduct = urlParams.get('product');
@@ -495,7 +489,6 @@
                     currentPage = Math.floor(foundIndex / itemsPerPage) + 1;
                     filterAndRender();
                     const cardIndex = foundIndex % itemsPerPage;
-                    // Slight delay to ensure DOM is fully ready to display modal
                     setTimeout(() => {
                         openModalFromData(cardIndex);
                     }, 100);
