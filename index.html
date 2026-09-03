@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>abhisales.in - Store</title>
+    
+    <!-- Open Graph (OG) Meta Tags for WhatsApp/Facebook Preview -->
+    <meta property="og:title" content="abhisales.in Store">
+    <meta property="og:description" content="Explore our latest collection of products at best prices.">
+    <meta property="og:image" content="https://abhisales.in/logo.jpg"> <!-- మీ వెబ్‌సైట్ లోగో లేదా ప్రొడక్ట్ ఇమేజ్ లింక్ ఇక్కడ ఇవ్వండి -->
+    <meta property="og:url" content="https://abhisales.in">
+    <meta property="og:type" content="website">
+
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -451,7 +459,6 @@
             const productLink = `${baseUrl}?product=${encodeURIComponent(title)}`;
             const shareText = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nView details here: ${productLink}`;
 
-            // మొబైల్ డివైస్‌లలో నేరుగా ఫొటో + లింక్ షేర్ చేయడానికి (Native Share API)
             if (navigator.share) {
                 try {
                     const response = await fetch(imageUrl);
@@ -471,7 +478,6 @@
                 }
             }
 
-            // ఒకవేళ పీసీ (PC) లేదా సపోర్ట్ చేయని బ్రౌజర్ అయితే ఇమేజ్ కాపీ చేసి వాట్సాప్ ఓపెన్ అవుతుంది
             try {
                 const response = await fetch(imageUrl);
                 const blob = await response.blob();
