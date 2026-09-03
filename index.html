@@ -114,9 +114,17 @@
         .modal-buy-btn { background: #0084ff; color: #fff; text-align: center; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: block; transition: 0.2s; }
         .modal-buy-btn:hover { background: #1877f2; }
         
-        /* WhatsApp Share Button Styles */
+        /* WhatsApp Share & Copy Button Styles */
         .modal-whatsapp-btn { background: #25D366; color: #fff; text-align: center; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: block; border: none; cursor: pointer; transition: 0.2s; }
         .modal-whatsapp-btn:hover { background: #1ebe57; }
+
+        /* Toast Notification for Copy */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #1c1e21; color: #fff; padding: 12px 24px; border-radius: 50px; font-size: 14px;
+            font-weight: 600; z-index: 3000; transition: transform 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
 
         /* Pagination */
         .pagination { text-align: center; margin: 40px 0; }
@@ -198,12 +206,15 @@
                     <div class="modal-price" id="modalPrice">₹0</div>
                     <div class="modal-actions">
                         <a href="#" id="modalBuyBtn" target="_blank" class="modal-buy-btn">Buy Now</a>
-                        <button onclick="shareOnWhatsApp()" class="modal-whatsapp-btn">Share on WhatsApp</button>
+                        <button onclick="copyImageAndShare()" class="modal-whatsapp-btn">Copy Image & Share on WA</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toastNotification">Image Copied! Now Paste in WhatsApp.</div>
 
     <!-- Footer -->
     <footer>
@@ -422,20 +433,43 @@
             }
         }
 
-        // WhatsApp Share Function with Image Link Included
-        function shareOnWhatsApp() {
+        // Copy Image to Clipboard and Open WhatsApp with Link
+        async function copyImageAndShare() {
             const title = document.getElementById('modalTitle').innerText;
             const price = document.getElementById('modalPrice').innerText;
-            const imageUrl = document.getElementById('modalImg').src; // ప్రొడక్ట్ ఇమేజ్ లింక్
+            const imageUrl = document.getElementById('modalImg').src;
             
             const baseUrl = window.location.origin + window.location.pathname;
             const productLink = `${baseUrl}?product=${encodeURIComponent(title)}`;
             
-            // మెసేజ్‌లో ఇమేజ్ లింక్ చేర్చడం ద్వారా వాట్సాప్ ప్రివ్యూ కనిపిస్తుంది
-            const message = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nImage: ${imageUrl}\n\nView details here: ${productLink}`;
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-            
-            window.open(whatsappUrl, '_blank');
+            // Try copying the image directly to clipboard
+            try {
+                const response = await fetch(imageUrl);
+                const blob = await response.blob();
+                await navigator.clipboard.write([
+                    new ClipboardItem({ [blob.type]: blob })
+                ]);
+                showToast("Image Copied! Now Paste (Ctrl+V) in WhatsApp chat.");
+            } catch (err) {
+                console.error('Could not copy image: ', err);
+                showToast("Sharing text and link to WhatsApp...");
+            }
+
+            // Open WhatsApp after a brief delay
+            setTimeout(() => {
+                const message = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nView details here: ${productLink}`;
+                const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            }, 1000);
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('toastNotification');
+            toast.innerText = text;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
         }
 
         // Auto Open Modal when link with product query is opened
@@ -495,4 +529,3 @@
     </script>
 </body>
 </html>
-```[cite: 1]
