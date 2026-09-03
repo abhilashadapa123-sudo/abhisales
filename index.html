@@ -8,7 +8,7 @@
     <!-- Open Graph (OG) Meta Tags for WhatsApp/Facebook Preview -->
     <meta property="og:title" content="abhisales.in Store">
     <meta property="og:description" content="Explore our latest collection of products at best prices.">
-    <meta property="og:image" content="https://abhisales.in/logo.jpg"> <!-- మీ వెబ్‌సైట్ లోగో లేదా ప్రొడక్ట్ ఇమేజ్ లింక్ ఇక్కడ ఇవ్వండి -->
+    <meta property="og:image" content="https://abhisales.in/logo.jpg">
     <meta property="og:url" content="https://abhisales.in">
     <meta property="og:type" content="website">
 
@@ -90,7 +90,13 @@
         .product-card:hover .image-box img { transform: scale(1.06); }
         .product-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #1c1e21; height: 38px; overflow: hidden; line-height: 1.3; cursor: pointer; }
         .product-card h3:hover { color: #0084ff; }
-        .product-info { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; border-top: 1px solid #f0f2f5; padding-top: 10px; }
+        
+        /* Product Card Stats (Views & Likes Row) */
+        .card-stats { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #606770; margin-bottom: 8px; }
+        .like-btn-card { background: none; border: none; cursor: pointer; font-size: 13px; color: #606770; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
+        .like-btn-card:hover { color: #ff3b30; }
+
+        .product-info { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; border-top: 1px solid #f0f2f5; padding-top: 10px; }
         .product-card p { color: #00a400; font-weight: 700; font-size: 15px; }
         .btn-buy { background: #0084ff; color: #fff; border: none; padding: 6px 14px; text-decoration: none; font-size: 12px; font-weight: 600; border-radius: 6px; transition: 0.2s; cursor: pointer; }
         .btn-buy:hover { background: #1877f2; }
@@ -114,15 +120,20 @@
         .modal-img-box { flex: 1; background: #f8f9fa; border-radius: 12px; height: 350px; display: flex; align-items: center; justify-content: center; padding: 20px; border: 1px solid #e4e6eb; }
         .modal-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .modal-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .modal-details h2 { font-size: 20px; color: #1c1e21; margin-bottom: 12px; line-height: 1.4; }
-        .modal-category { display: inline-block; background: rgba(0,132,255,0.1); color: #0084ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 15px; width: fit-content; }
-        .modal-price { font-size: 24px; color: #00a400; font-weight: 800; margin-bottom: 20px; }
+        .modal-details h2 { font-size: 20px; color: #1c1e21; margin-bottom: 8px; line-height: 1.4; }
+        .modal-category { display: inline-block; background: rgba(0,132,255,0.1); color: #0084ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 10px; width: fit-content; }
+        
+        /* Modal Stats & Like Button */
+        .modal-stats { display: flex; gap: 15px; align-items: center; font-size: 13px; color: #606770; margin-bottom: 12px; }
+        .modal-like-btn { background: #f0f2f5; border: 1px solid #ccd0d5; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: 0.2s; color: #1c1e21; }
+        .modal-like-btn:hover { background: #ffebee; color: #ff3b30; border-color: #ff3b30; }
+
+        .modal-price { font-size: 24px; color: #00a400; font-weight: 800; margin-bottom: 15px; }
         
         .modal-actions { display: flex; flex-direction: column; gap: 10px; }
         .modal-buy-btn { background: #0084ff; color: #fff; text-align: center; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: block; transition: 0.2s; }
         .modal-buy-btn:hover { background: #1877f2; }
         
-        /* WhatsApp Share & Copy Button Styles */
         .modal-whatsapp-btn { background: #25D366; color: #fff; text-align: center; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: block; border: none; cursor: pointer; transition: 0.2s; }
         .modal-whatsapp-btn:hover { background: #1ebe57; }
 
@@ -140,8 +151,9 @@
         .page-btn:hover { background: #0084ff; color: #fff; border-color: #0084ff; }
         .page-info { margin: 0 15px; font-weight: 600; font-size: 14px; color: #606770; }
         
-        /* Footer */
+        /* Footer & Total Visitor Counter Banner */
         footer { background: #f0f2f5; color: #4b4f56; border-top: 1px solid #e4e6eb; padding: 40px 20px 20px 20px; font-size: 13px; margin-top: auto; }
+        .visitor-counter-banner { text-align: center; background: #ffffff; border: 1px solid #e4e6eb; padding: 12px; border-radius: 8px; margin-bottom: 30px; font-weight: 600; color: #1c1e21; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; padding-bottom: 30px; border-bottom: 1px solid #ccd0d5; }
         .footer-col h4 { color: #1c1e21; font-size: 16px; margin-bottom: 15px; font-weight: 700; }
         .footer-col p, .footer-col ul { list-style: none; line-height: 1.8; }
@@ -218,6 +230,12 @@
                 <div>
                     <span class="modal-category" id="modalCategory">Category</span>
                     <h2 id="modalTitle">Product Title</h2>
+                    <div class="modal-stats">
+                        <span>👁️ Views: <b id="modalViews">0</b></span>
+                        <button class="modal-like-btn" id="modalLikeBtn" onclick="likeActiveProduct()">
+                            ❤️ Like <span id="modalLikes">0</span>
+                        </button>
+                    </div>
                 </div>
                 <div>
                     <div class="modal-price" id="modalPrice">₹0</div>
@@ -235,6 +253,11 @@
 
     <!-- Footer -->
     <footer>
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div class="visitor-counter-banner">
+                👀 Total Website Visitors: <span id="siteVisitCount" style="color: #0084ff;">Loading...</span>
+            </div>
+        </div>
         <div class="footer-content">
             <div class="footer-col">
                 <h4>About abhisales.in</h4>
@@ -272,6 +295,17 @@
         let currentCategory = 'All';
         let searchQuery = '';
         let slideInterval;
+        let activeProductIndex = null;
+
+        // Fetch Total Visitors on load
+        fetch('https://api.counterapi.dev/v1/abhisales/total_visits/up')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('siteVisitCount').innerText = data.count;
+            })
+            .catch(() => {
+                document.getElementById('siteVisitCount').innerText = '100+';
+            });
 
         async function fetchInitialData() {
             await fetchSliders();
@@ -340,6 +374,13 @@
             } catch (e) {
                 generateDummyData();
             }
+            
+            // Initialize local stats storage for views and likes if not present
+            allProducts.forEach((p, idx) => {
+                if (p.views === undefined) p.views = Math.floor(Math.random() * 50) + 10;
+                if (p.likes === undefined) p.likes = Math.floor(Math.random() * 10);
+            });
+
             filterAndRender();
             checkSharedProductUrl();
         }
@@ -352,7 +393,9 @@
                 price: `₹${(i + 1) * 99}`,
                 category: cats[i % cats.length],
                 image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
-                link: '#'
+                link: '#',
+                views: Math.floor(Math.random() * 50) + 5,
+                likes: Math.floor(Math.random() * 15)
             }));
         }
 
@@ -399,45 +442,60 @@
                 return;
             }
 
-            grid.innerHTML = pageItems.map((p, index) => `
-                <div class="product-card">
-                    <div>
-                        <div class="image-box" onclick="openModalFromData(${index})">
-                            <img src="${p.image}" alt="${p.title}">
+            grid.innerHTML = pageItems.map((p, index) => {
+                let absoluteIndex = start + index;
+                return `
+                    <div class="product-card">
+                        <div>
+                            <div class="image-box" onclick="openModalFromData(${absoluteIndex})">
+                                <img src="${p.image}" alt="${p.title}">
+                            </div>
+                            <h3 onclick="openModalFromData(${absoluteIndex})">${p.title}</h3>
+                            <div class="card-stats">
+                                <span>👁️ ${p.views} Views</span>
+                                <button class="like-btn-card" onclick="likeCardProduct(${absoluteIndex}, event)">
+                                    ❤️ <span>${p.likes}</span>
+                                </button>
+                            </div>
                         </div>
-                        <h3 onclick="openModalFromData(${index})">${p.title}</h3>
-                    </div>
-                    <div>
-                        <div class="product-info">
-                            <p>${p.price}</p>
-                            <button class="btn-buy" onclick="openModalFromData(${index})">View / Buy</button>
+                        <div>
+                            <div class="product-info">
+                                <p>${p.price}</p>
+                                <button class="btn-buy" onclick="openModalFromData(${absoluteIndex})">View / Buy</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             renderPagination(filtered.length);
         }
 
-        function openModalFromData(index) {
-            let filtered = allProducts.filter(p => {
-                let matchCat = currentCategory === 'All' || p.category.toLowerCase() === currentCategory.toLowerCase();
-                let matchSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchCat && matchSearch;
-            });
-            const start = (currentPage - 1) * itemsPerPage;
-            const p = filtered[start + index];
+        function likeCardProduct(globalIndex, event) {
+            event.stopPropagation();
+            allProducts[globalIndex].likes += 1;
+            filterAndRender();
+        }
+
+        function openModalFromData(globalIndex) {
+            activeProductIndex = globalIndex;
+            const p = allProducts[globalIndex];
             if(p) {
-                openModal(p.title, p.price, p.category, p.image, p.link);
+                // Increase view count when opened
+                p.views += 1;
+                openModal(p.title, p.price, p.category, p.image, p.link, p.views, p.likes);
+                filterAndRender(); // update card view count background
             }
         }
 
-        function openModal(title, price, category, image, link) {
+        function openModal(title, price, category, image, link, views, likes) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalPrice').innerText = price;
             document.getElementById('modalCategory').innerText = category;
             document.getElementById('modalImg').src = image;
             document.getElementById('modalBuyBtn').href = link;
+            document.getElementById('modalViews').innerText = views;
+            document.getElementById('modalLikes').innerText = likes;
             
             const baseUrl = window.location.origin + window.location.pathname;
             document.getElementById('modalImgLink').href = `${baseUrl}?product=${encodeURIComponent(title)}`;
@@ -445,8 +503,17 @@
             document.getElementById('productModal').style.display = 'flex';
         }
 
+        function likeActiveProduct() {
+            if (activeProductIndex !== null) {
+                allProducts[activeProductIndex].likes += 1;
+                document.getElementById('modalLikes').innerText = allProducts[activeProductIndex].likes;
+                filterAndRender();
+            }
+        }
+
         function closeModal() {
             document.getElementById('productModal').style.display = 'none';
+            activeProductIndex = null;
             if (window.history.replaceState) {
                 const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                 window.history.replaceState({path: cleanUrl}, '', cleanUrl);
@@ -521,9 +588,8 @@
                 if (foundIndex !== -1) {
                     currentPage = Math.floor(foundIndex / itemsPerPage) + 1;
                     filterAndRender();
-                    const cardIndex = foundIndex % itemsPerPage;
                     setTimeout(() => {
-                        openModalFromData(cardIndex);
+                        openModalFromData(foundIndex);
                     }, 100);
                 }
             }
