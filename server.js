@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
   if (productName) {
     try {
       const products = getProducts();
-      // కేవలం టైటిల్ సరిపోల్చడం (మ్యాచింగ్) ద్వారా ప్రొడక్ట్ వెతకడం
+      // కేవలం టైటిల్ సరిపోల్చడం ద్వారా ప్రొడక్ట్ వెతకడం
       const product = products.find(p => p.title.toLowerCase() === decodeURIComponent(productName).toLowerCase());
       
       if (product) {
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
               <title>${product.title} - abhisales.in</title>
               
               <!-- Open Graph Meta Tags for WhatsApp & Social Media Preview -->
-              <meta property="property" content="og:title" content="${product.title}" />
+              <meta property="og:title" content="${product.title}" />
               <meta property="og:description" content="Price: ${product.price} | Buy now on abhisales.in" />
               <meta property="og:image" content="${product.image}" />
               <meta property="og:url" content="${req.protocol}://${req.get('host')}${req.originalUrl}" />
@@ -289,7 +289,6 @@ app.delete('/api/sliders/:id', async (req, res) => {
     const sliderId = req.params.id;
     let sliders = getSliders();
     
-    // Fixed typo here: removed extra "The"
     let filteredSliders = sliders.filter(s => s.id != sliderId);
     
     if (filteredSliders.length === sliders.length) {
