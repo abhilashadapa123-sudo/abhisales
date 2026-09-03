@@ -422,15 +422,17 @@
             }
         }
 
-        // Updated WhatsApp Share Function with direct product link query
+        // WhatsApp Share Function with Image Link Included
         function shareOnWhatsApp() {
             const title = document.getElementById('modalTitle').innerText;
             const price = document.getElementById('modalPrice').innerText;
+            const imageUrl = document.getElementById('modalImg').src; // ప్రొడక్ట్ ఇమేజ్ లింక్
             
             const baseUrl = window.location.origin + window.location.pathname;
             const productLink = `${baseUrl}?product=${encodeURIComponent(title)}`;
             
-            const message = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nView details here: ${productLink}`;
+            // మెసేజ్‌లో ఇమేజ్ లింక్ చేర్చడం ద్వారా వాట్సాప్ ప్రివ్యూ కనిపిస్తుంది
+            const message = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nImage: ${imageUrl}\n\nView details here: ${productLink}`;
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
             
             window.open(whatsappUrl, '_blank');
@@ -493,3 +495,4 @@
     </script>
 </body>
 </html>
+```[cite: 1]
