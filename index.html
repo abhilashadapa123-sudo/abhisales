@@ -109,8 +109,14 @@
         .modal-details h2 { font-size: 20px; color: #1c1e21; margin-bottom: 12px; line-height: 1.4; }
         .modal-category { display: inline-block; background: rgba(0,132,255,0.1); color: #0084ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 15px; width: fit-content; }
         .modal-price { font-size: 24px; color: #00a400; font-weight: 800; margin-bottom: 20px; }
+        
+        .modal-actions { display: flex; flex-direction: column; gap: 10px; }
         .modal-buy-btn { background: #0084ff; color: #fff; text-align: center; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: block; transition: 0.2s; }
         .modal-buy-btn:hover { background: #1877f2; }
+        
+        /* WhatsApp Share Button Styles */
+        .modal-whatsapp-btn { background: #25D366; color: #fff; text-align: center; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: block; border: none; cursor: pointer; transition: 0.2s; }
+        .modal-whatsapp-btn:hover { background: #1ebe57; }
 
         /* Pagination */
         .pagination { text-align: center; margin: 40px 0; }
@@ -124,6 +130,7 @@
         .footer-col h4 { color: #1c1e21; font-size: 16px; margin-bottom: 15px; font-weight: 700; }
         .footer-col p, .footer-col ul { list-style: none; line-height: 1.8; }
         .footer-col ul li a { color: #606770; text-decoration: none; transition: 0.2s; }
+        .footer-col ul li a:hover { color: #0084ff; text-decoration: underline; }
         .footer-col ul li a:hover { color: #0084ff; text-decoration: underline; }
         .footer-bottom { max-width: 1200px; margin: 20px auto 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; color: #606770; font-size: 12px; }
         .footer-admin-link { color: #0084ff; font-weight: 600; text-decoration: none; }
@@ -190,7 +197,10 @@
                 </div>
                 <div>
                     <div class="modal-price" id="modalPrice">₹0</div>
-                    <a href="#" id="modalBuyBtn" target="_blank" class="modal-buy-btn">Buy Now</a>
+                    <div class="modal-actions">
+                        <a href="#" id="modalBuyBtn" target="_blank" class="modal-buy-btn">Buy Now</a>
+                        <button onclick="shareOnWhatsApp()" class="modal-whatsapp-btn">Share on WhatsApp</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -411,6 +421,18 @@
             if (event.target.id === 'productModal') {
                 closeModal();
             }
+        }
+
+        // WhatsApp Share Function
+        function shareOnWhatsApp() {
+            const title = document.getElementById('modalTitle').innerText;
+            const price = document.getElementById('modalPrice').innerText;
+            const buyLink = document.getElementById('modalBuyBtn').href;
+            
+            const message = `Check out this product on abhisales.in:\n\n*${title}*\nPrice: ${price}\n\nBuy/View here: ${buyLink}`;
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank');
         }
 
         function renderPagination(totalItems) {
