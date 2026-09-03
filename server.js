@@ -166,7 +166,7 @@ app.post('/api/products', async (req, res) => {
       category: req.body.category,
       image: req.body.image,
       link: req.body.link,
-      videoUrl: req.body.videoUrl || '' // ఇది వీడియో లింక్‌ని సేవ్ చేస్తుంది
+      videoUrl: req.body.videoUrl || '' 
     };
     products.push(newProduct);
     
@@ -196,7 +196,7 @@ app.put('/api/products/:id', async (req, res) => {
       category: req.body.category,
       image: req.body.image,
       link: req.body.link,
-      videoUrl: req.body.videoUrl || '' // ఇది ఎడిట్ చేసినప్పుడు వీడియో లింక్‌ని అప్‌డేట్ చేస్తుంది
+      videoUrl: req.body.videoUrl || '' 
     };
     
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
@@ -289,7 +289,8 @@ app.delete('/api/sliders/:id', async (req, res) => {
     const sliderId = req.params.id;
     let sliders = getSliders();
     
-    The filteredSliders = sliders.filter(s => s.id != sliderId);
+    // Fixed typo here: removed extra "The"
+    let filteredSliders = sliders.filter(s => s.id != sliderId);
     
     if (filteredSliders.length === sliders.length) {
       return res.status(404).json({ success: false, message: 'Slider not found' });
